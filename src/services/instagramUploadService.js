@@ -80,3 +80,31 @@ exports.deleteInstagram = async (id) => {
         throw error;
     }
 };
+
+exports.getInstagramStats = async () => {
+    try {
+        const instagramUploads = await InstagramUpload.findAll({
+            attributes: ['image_url']
+        });
+
+        let totalPhotosShared = 0;
+        instagramUploads.forEach(upload => {
+            if (upload.image_url) {
+                // Count number of images in the comma-separated string
+                const images = upload.image_url.split(',').filter(url => url.trim() !== '');
+                totalPhotosShared += images.length;
+            }
+        });
+
+        const heartPixels = 500; // Total goal from the UI mockup
+        const heartFilled = totalPhotosShared > 0 ? (totalPhotosShared / heartPixels) * 100 : 0;
+
+        return {
+            totalPhotosShared,
+            heartPixels,
+            heartFilled: Math.round(heartFilled * 10) / 10 // Round to 1 decimal place
+        };
+    } catch (error) {
+        throw error;
+    }
+};

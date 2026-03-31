@@ -23,6 +23,17 @@ const login = async (req, res, next) => {
   }
 };
 
+/**
+ * Handle user logout
+ */
+const logout = async (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Logout successful'
+  });
+};
+
 module.exports = {
-  login
+  login,
+  logout
 };

@@ -8,6 +8,7 @@ const { authenticate, authorize } = require('../middleware/authMiddleware');
 // @desc    Get all instagram uploads
 // @access  Public
 router.get('/', instagramUploadController.getAllInstagram);
+router.get('/stats', instagramUploadController.getStats);
 
 // @route   POST api/instagram
 // @desc    Upload new instagram image(s)

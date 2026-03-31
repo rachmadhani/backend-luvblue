@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     InstagramUpload.init({
         image_url: DataTypes.STRING,
         instagram_users: DataTypes.TEXT,
+        instagram_links: DataTypes.TEXT,
     }, {
         sequelize,
         modelName: 'InstagramUpload',

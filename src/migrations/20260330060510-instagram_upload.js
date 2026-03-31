@@ -18,6 +18,10 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true
       },
+      instagram_links: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

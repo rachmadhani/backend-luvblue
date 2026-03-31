@@ -46,6 +46,9 @@ components:
         instagram_users:
           type: string
           nullable: true
+        instagram_links:
+          type: string
+          nullable: true
         createdAt:
           type: string
           format: date-time
@@ -131,6 +134,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+ 
+  /auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: Logout user
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
 
   /instagram:
     get:
@@ -196,6 +217,8 @@ paths:
                   format: binary
                 instagram_users:
                   type: string
+                instagram_links:
+                  type: string
       responses:
         '200':
           description: Upload successful
@@ -210,7 +233,34 @@ paths:
                     type: string
                   data:
                     $ref: '#/components/schemas/InstagramUpload'
-
+ 
+  /instagram/stats:
+    get:
+      tags:
+        - Instagram
+      summary: Get Instagram upload statistics
+      responses:
+        '200':
+          description: Statistics fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      totalPhotosShared:
+                        type: integer
+                      heartPixels:
+                        type: integer
+                      heartFilled:
+                        type: number
+ 
   /instagram/{id}:
     put:
       tags:
@@ -234,6 +284,8 @@ paths:
                   type: string
                   format: binary
                 instagram_users:
+                  type: string
+                instagram_links:
                   type: string
       responses:
         '200':
