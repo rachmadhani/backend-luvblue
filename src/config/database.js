@@ -3,13 +3,15 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const sequelize = new Sequelize(
-  process.env.DB_NAME || 'luvblue_db',
-  process.env.DB_USER || 'root',
-  process.env.DB_PASSWORD || '',
+  isProduction ? process.env.DB_NAME_PRODUCTION : (process.env.DB_NAME || 'luvblue_db'),
+  isProduction ? process.env.DB_USER_PRODUCTION : (process.env.DB_USER || 'root'),
+  isProduction ? process.env.DB_PASSWORD_PRODUCTION : (process.env.DB_PASSWORD || ''),
   {
-    host: process.env.DB_HOST || 'localhost',
-    dialect: process.env.DB_DIALECT || 'mysql',
+    host: isProduction ? process.env.DB_HOST_PRODUCTION : (process.env.DB_HOST || 'localhost'),
+    dialect: isProduction ? (process.env.DB_DIALECT_PRODUCTION || 'mysql') : (process.env.DB_DIALECT || 'mysql'),
     logging: false,
   }
 );
