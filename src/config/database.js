@@ -1,28 +1,33 @@
 const { Sequelize } = require('sequelize');
 const dotenv = require('dotenv');
+const path = require('path');
+const config = require('./config');
 
-dotenv.config();
+// Load .env using absolute path to ensure it's found even if started from a different directory
+dotenv.config({ path: path.join(__dirname, '../../.env') });
 
-const isProduction = process.env.NODE_ENV === 'production';
+const env = process.env.NODE_ENV || 'development';
+const dbConfig = config[env];
 
 const sequelize = new Sequelize(
-  isProduction ? process.env.DB_NAME_PRODUCTION : (process.env.DB_NAME || 'luvblue_db'),
-  isProduction ? process.env.DB_USER_PRODUCTION : (process.env.DB_USER || 'root'),
-  isProduction ? process.env.DB_PASSWORD_PRODUCTION : (process.env.DB_PASSWORD || ''),
+  dbConfig.database,
+  dbConfig.username,
+  dbConfig.password,
   {
-    host: isProduction ? process.env.DB_HOST_PRODUCTION : (process.env.DB_HOST || 'localhost'),
-    dialect: isProduction ? (process.env.DB_DIALECT_PRODUCTION || 'mysql') : (process.env.DB_DIALECT || 'mysql'),
-    logging: false,
+    host: dbConfig.host,
+    dialect: dbConfig.dialect || 'mysql',
+    logging: dbConfig.logging,
   }
 );
 
 const testConnection = async () => {
   try {
     await sequelize.authenticate();
-    console.log('MySQL connection has been established successfully.');
+    console.log(`MySQL connection has been established successfully in [${env}] mode.`);
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.error('Unable to connect to the database:', error.message);
   }
 };
 
 module.exports = { sequelize, testConnection };
+

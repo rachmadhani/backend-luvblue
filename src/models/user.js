@@ -49,6 +49,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: 'email'
+    },
+    logged_out_at: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
     sequelize,
