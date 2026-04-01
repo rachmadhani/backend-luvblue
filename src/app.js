@@ -9,13 +9,29 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
+// Middlewares
+app.use((req, res, next) => {
+  const origin = req.headers.origin || 'no-origin';
+  console.log(`[DEBUG] Incoming Request: ${req.method} ${req.url} from Origin: ${origin}`);
+  next();
+});
+
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').map(origin => origin.trim()).filter(Boolean);
 const corsOptions = {
-  origin: allowedOrigins.length > 0 ? allowedOrigins : '*',
+  origin: (origin, callback) => {
+    // If no origin (like mobile apps or curl requests) allow it
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.length === 0 || allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
+      callback(null, true);
+    } else {
+      console.warn(`[CORS REJECT] Origin: ${origin} is not in ALLOWED_ORIGINS:`, allowedOrigins);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
 };
 app.use(cors(corsOptions));
 app.use(express.json());
