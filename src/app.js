@@ -10,8 +10,9 @@ dotenv.config();
 const app = express();
 
 // Middleware
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').map(origin => origin.trim()).filter(Boolean);
 const corsOptions = {
-  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*',
+  origin: allowedOrigins.length > 0 ? allowedOrigins : '*',
   credentials: true,
 };
 app.use(cors(corsOptions));

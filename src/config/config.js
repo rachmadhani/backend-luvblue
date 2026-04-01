@@ -1,12 +1,19 @@
 require('dotenv').config();
 
+const cleanEnv = (key, defaultValue = null) => {
+  const value = process.env[key];
+  if (!value) return defaultValue;
+  // Remove trailing comments and whitespace
+  return value.split('#')[0].trim();
+};
+
 module.exports = {
   development: {
-    username: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || null,
-    database: process.env.DB_NAME || 'luvblue_db',
-    host: process.env.DB_HOST || '127.0.0.1',
-    dialect: process.env.DB_DIALECT || 'mysql',
+    username: cleanEnv('DB_USER', 'root'),
+    password: cleanEnv('DB_PASSWORD', null),
+    database: cleanEnv('DB_NAME', 'luvblue_db'),
+    host: cleanEnv('DB_HOST', '127.0.0.1'),
+    dialect: cleanEnv('DB_DIALECT', 'mysql'),
     logging: false,
   },
   test: {
@@ -18,11 +25,11 @@ module.exports = {
     logging: false,
   },
   production: {
-    username: process.env.DB_USER_PRODUCTION,
-    password: process.env.DB_PASSWORD_PRODUCTION,
-    database: process.env.DB_NAME_PRODUCTION,
-    host: process.env.DB_HOST_PRODUCTION,
-    dialect: process.env.DB_DIALECT_PRODUCTION,
+    username: cleanEnv('DB_USER_PRODUCTION'),
+    password: cleanEnv('DB_PASSWORD_PRODUCTION'),
+    database: cleanEnv('DB_NAME_PRODUCTION'),
+    host: cleanEnv('DB_HOST_PRODUCTION'),
+    dialect: cleanEnv('DB_DIALECT_PRODUCTION'),
     logging: false,
   },
 };

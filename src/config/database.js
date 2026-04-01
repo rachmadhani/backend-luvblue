@@ -6,7 +6,7 @@ const config = require('./config');
 // Load .env using absolute path to ensure it's found even if started from a different directory
 dotenv.config({ path: path.join(__dirname, '../../.env') });
 
-const env = process.env.NODE_ENV || 'development';
+const env = (process.env.NODE_ENV || 'development').split('#')[0].trim();
 const dbConfig = config[env];
 
 const sequelize = new Sequelize(
