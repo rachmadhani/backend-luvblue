@@ -14,6 +14,8 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').map(origin
 const corsOptions = {
   origin: allowedOrigins.length > 0 ? allowedOrigins : '*',
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 app.use(cors(corsOptions));
 app.use(express.json());
