@@ -25,8 +25,8 @@ const corsOptions = {
     if (allowedOrigins.length === 0 || allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
       callback(null, true);
     } else {
-      console.warn(`[CORS REJECT] Origin: ${origin} is not in ALLOWED_ORIGINS:`, allowedOrigins);
-      callback(new Error('Not allowed by CORS'));
+      console.warn(`[CORS REJECT] Origin: ${origin} is not in ALLOWED_ORIGINS:`, allowedOrigins, `| Request: ${req.method} ${req.url}`);
+      callback(new Error(`Not allowed by CORS: ${origin}`));
     }
   },
   credentials: true,
