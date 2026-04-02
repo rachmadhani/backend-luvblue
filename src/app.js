@@ -21,11 +21,11 @@ const corsOptions = {
   origin: (origin, callback) => {
     // If no origin (like mobile apps or curl requests) allow it
     if (!origin) return callback(null, true);
-    
+
     if (allowedOrigins.length === 0 || allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
       callback(null, true);
     } else {
-      console.warn(`[CORS REJECT] Origin: ${origin} is not in ALLOWED_ORIGINS:`, allowedOrigins, `| Request: ${req.method} ${req.url}`);
+      console.warn(`[CORS REJECT] Origin: ${origin} is not in ALLOWED_ORIGINS:`, allowedOrigins);
       callback(new Error(`Not allowed by CORS: ${origin}`));
     }
   },
