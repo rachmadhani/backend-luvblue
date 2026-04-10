@@ -7,6 +7,8 @@ const storage = multer.diskStorage({
         let folder = 'instagram';
         if (req.originalUrl.includes('/diary')) {
             folder = 'diary';
+        } else if (req.originalUrl.includes('/blue-notes')) {
+            folder = 'blue-notes';
         }
         const uploadPath = path.join(__dirname, '..', '..', 'public', 'uploads', folder);
 
