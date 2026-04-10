@@ -29,7 +29,20 @@ module.exports = {
     password: cleanEnv('DB_PASSWORD_PRODUCTION'),
     database: cleanEnv('DB_NAME_PRODUCTION'),
     host: cleanEnv('DB_HOST_PRODUCTION'),
-    dialect: cleanEnv('DB_DIALECT_PRODUCTION'),
+    port: Number(cleanEnv('DB_PORT_PRODUCTION', '3306')),
+    dialect: cleanEnv('DB_DIALECT_PRODUCTION', 'mysql'),
     logging: false,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 60000,
+      idle: 10000
+    },
+    dialectOptions: {
+      connectTimeout: 60000,
+      ssl: {
+        rejectUnauthorized: false
+      }
+    }
   },
 };

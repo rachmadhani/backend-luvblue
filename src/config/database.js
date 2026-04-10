@@ -9,23 +9,31 @@ dotenv.config({ path: path.join(__dirname, '../../.env') });
 const env = (process.env.NODE_ENV || 'development').split('#')[0].trim();
 const dbConfig = config[env];
 
+console.log(`[DATABASE] Configuring connection for [${env}] environment...`);
+console.log(`[DATABASE] Host: ${dbConfig.host}:${dbConfig.port || 3306}`);
+console.log(`[DATABASE] Database: ${dbConfig.database}`);
+console.log(`[DATABASE] User: ${dbConfig.username}`);
+
 const sequelize = new Sequelize(
   dbConfig.database,
   dbConfig.username,
   dbConfig.password,
   {
-    host: dbConfig.host,
-    dialect: dbConfig.dialect || 'mysql',
-    logging: dbConfig.logging,
+    ...dbConfig,
+    logging: dbConfig.logging === true ? console.log : false,
   }
 );
 
 const testConnection = async () => {
   try {
+    console.log(`[DATABASE] Attempting to connect to the database...`);
     await sequelize.authenticate();
-    console.log(`MySQL connection has been established successfully in [${env}] mode.`);
+    console.log(`[DATABASE] SUCCESS: Connection has been established successfully in [${env}] mode.`);
   } catch (error) {
-    console.error('Unable to connect to the database:', error.message);
+    console.error(`[DATABASE] ERROR: Unable to connect to the database [${env}]:`, error.message);
+    if (error.original) {
+      console.error(`[DATABASE] DEBUG INFO:`, error.original.code, error.original.syscall);
+    }
   }
 };
 

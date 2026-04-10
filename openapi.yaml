@@ -56,6 +56,28 @@ components:
           type: string
           format: date-time
 
+    DiaryContent:
+      type: object
+      properties:
+        id:
+          type: integer
+        diary_image_url:
+          type: string
+        diary_title:
+          type: string
+        diary_brief_title:
+          type: string
+        diary_brief_description:
+          type: string
+        diary_instagram_link:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
     Error:
       type: object
       properties:
@@ -310,3 +332,184 @@ paths:
           description: Delete successful
         '403':
           description: Forbidden - Requires admin role
+
+  /diary:
+    get:
+      tags:
+        - Diary
+      summary: Get all diary contents
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of diary contents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DiaryContent'
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      page:
+                        type: integer
+                      limit:
+                        type: integer
+                      totalPages:
+                        type: integer
+
+    post:
+      tags:
+        - Diary
+      summary: Create new diary content
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                diary_image:
+                  type: string
+                  format: binary
+                diary_title:
+                  type: string
+                diary_brief_title:
+                  type: string
+                diary_brief_description:
+                  type: string
+                diary_instagram_link:
+                  type: string
+      responses:
+        '201':
+          description: Created successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/DiaryContent'
+
+  /diary/{id}:
+    get:
+      tags:
+        - Diary
+      summary: Get diary content by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Diary content details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/DiaryContent'
+        '404':
+          description: Diary content not found
+
+    put:
+      tags:
+        - Diary
+      summary: Update diary content
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                diary_image:
+                  type: string
+                  format: binary
+                diary_title:
+                  type: string
+                diary_brief_title:
+                  type: string
+                diary_brief_description:
+                  type: string
+                diary_instagram_link:
+                  type: string
+      responses:
+        '200':
+          description: Update successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/DiaryContent'
+        '404':
+          description: Diary content not found
+
+    delete:
+      tags:
+        - Diary
+      summary: Delete diary content
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Delete successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '404':
+          description: Diary content not found
