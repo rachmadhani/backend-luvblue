@@ -78,6 +78,28 @@ components:
           type: string
           format: date-time
 
+    BlueNote:
+      type: object
+      properties:
+        id:
+          type: integer
+        note_image_url:
+          type: string
+        note_title:
+          type: string
+        note_brief_title:
+          type: string
+        note_brief_description:
+          type: string
+        note_instagram_link:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
     Error:
       type: object
       properties:
@@ -513,3 +535,184 @@ paths:
                     type: string
         '404':
           description: Diary content not found
+
+  /blue-notes:
+    get:
+      tags:
+        - BlueNote
+      summary: Get all blue notes
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of blue notes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BlueNote'
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      page:
+                        type: integer
+                      limit:
+                        type: integer
+                      totalPages:
+                        type: integer
+
+    post:
+      tags:
+        - BlueNote
+      summary: Create new blue note
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                note_image:
+                  type: string
+                  format: binary
+                note_title:
+                  type: string
+                note_brief_title:
+                  type: string
+                note_brief_description:
+                  type: string
+                note_instagram_link:
+                  type: string
+      responses:
+        '201':
+          description: Created successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/BlueNote'
+
+  /blue-notes/{id}:
+    get:
+      tags:
+        - BlueNote
+      summary: Get blue note by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Blue note details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/BlueNote'
+        '404':
+          description: Blue note not found
+
+    put:
+      tags:
+        - BlueNote
+      summary: Update blue note
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                note_image:
+                  type: string
+                  format: binary
+                note_title:
+                  type: string
+                note_brief_title:
+                  type: string
+                note_brief_description:
+                  type: string
+                note_instagram_link:
+                  type: string
+      responses:
+        '200':
+          description: Update successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/BlueNote'
+        '404':
+          description: Blue note not found
+
+    delete:
+      tags:
+        - BlueNote
+      summary: Delete blue note
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Delete successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '404':
+          description: Blue note not found
